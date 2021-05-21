@@ -6,7 +6,7 @@ requirements: venv
 
 clean:
 	rm -rf venv
-	rm -rf output.txt
+	rm -rf answers.txt
 
 test:
 	. venv/bin/activate; python3 kMeans_shvnka005.py

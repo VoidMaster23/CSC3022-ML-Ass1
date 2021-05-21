@@ -12,7 +12,7 @@ import pandas as pd
 from random import randint
 import sys
 
-sys.stdout = open("output.txt", "w")
+sys.stdout = open("answers.txt", "w")
 
 #iteration count - to include initialisation step
 count = 0

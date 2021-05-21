@@ -66,10 +66,6 @@ def groupAndUpdateCentroids(initial):
 
     frame['meanX'] = meanX
     frame['meanY'] = meanY
-    
-    xCentroids[state] = meanX
-    yCentroids[state] = meanY
-
     # if not initial:
     print(f"CLUSTER  {state!r}:\n")
     if not initial:
@@ -79,6 +75,11 @@ def groupAndUpdateCentroids(initial):
     print("Data: ")
     print("------------------------")
     print(frame, "\n\n")
+    
+    xCentroids[state] = meanX
+    yCentroids[state] = meanY
+
+    
   
     dat = dat.append(frame)
 
@@ -229,6 +230,7 @@ def iterate():
 
 if __name__ == "__main__":
     initDF()
+    print("\n\n")
     print("____________INITIAL STEP ____________________\n\n\n")
     initialStep()
     print("\n\n")

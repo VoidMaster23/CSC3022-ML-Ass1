@@ -40,7 +40,7 @@ def nearestCent(d0,d1,d2):
     return 2
 
 def printFullFrame(frame):
-  with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
+  with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.width', None):  # more options can be specified also
       print(frame, "\n\n")
 
 def groupAndUpdateCentroids(initial):

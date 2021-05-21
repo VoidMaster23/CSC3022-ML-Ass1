@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import math
+from random import randint
 
 def getCoords(data, record):
     print(record)
@@ -57,11 +58,12 @@ dataDict = {
 data = pd.DataFrame(dataDict)
 
 #display data
-print("Input Data")
+print( "Input Data" )
 print(data)
 
 #randomly find initial centroid values
 centroids = [1, 4, 7]
+#centroids = [randint(0,7), randint(0,7), randint(0,7)]
 xCentroids = [-1, -1, -1]
 yCentroids = [-1, -1, -1]
 for i in range (3):
@@ -118,79 +120,71 @@ for state, frame in byNearest:
 data = dat.sort_index() #makes sure that the index is kept for the nearest comparison
 data
 
+for i in range (3):
+  #data[f'C{i}'] = centroids[i]
+  data[f'C{i}x'] = xCentroids[i]
+  data[f'C{i}y'] = yCentroids[i]
+
+#updatuing c values
+data
+
 oldNearest = np.zeros(8)
 
-if (oldNearest == data['nearest']).all():
-  print("HMMM")
 
+count = 1
 while not ( oldNearest == data['nearest']).all():
+  print("ITERATION\n", count)
+
+  print("___________PREVIOUS NEAREST CLUSTERS_________________")
   print(oldNearest)
-  oldNearest = data['nearest']
+  oldNearest = data['nearest'].copy()
+  print("\n")
+  print("___________NEAREST CLUSTERS_________________")
   print(oldNearest)
-
-  
-# while(not np.array_equal(data['nearest'].to_numpy(), oldNearest)):
-  
-#   #check distances to centroids 
-#   for i in range len(centroids):
-
-for i in range (8):
-  record = data.iloc[[i]]
-  # rCoord, C0x, C0y, C1x, C1y, C2x, C2y = getCoords(data, record)
-  print("xCentroid", xCentroids[0], "yCentroid", yCentroids[0])
-  print("X:", record["X"].values[0], "Y", record["Y"].values[0])
-
-#   # print(rCoord)
-#   # print(C0)
-#   # print(C1)
-#   # print(C2)
-
-#   dist0 = np.linalg.norm(np.array(rCoord)-np.array(C0))
-#   dist1 = np.linalg.norm(np.array(rCoord)-np.array(C1))
-#   dist2 = np.linalg.norm(np.array(rCoord)-np.array(C2))
-
-#   data.at[i,"D0"] = dist0
-#   data.at[i,"D1"] = dist1
-#   data.at[i,"D2"] = dist2
-
-#   # print(dist0)
-#   # print(dist1)
-#   # print(dist2)
-
-#   data.at[i,"nearest"] = nearestCent(dist0, dist1, dist2)
+  for i in range (8):
+    record = data.iloc[[i]]
+    Coord = np.array([record["X"].values[0], record["Y"].values[0]])
 
 
-  
+    C0 = np.array([xCentroids[0],yCentroids[0]])
+    dist0 = np.linalg.norm(np.array(Coord)-np.array(C0))
 
-# # data 
-  
+    C1 = np.array([xCentroids[1],yCentroids[1]])
+    dist1 = np.linalg.norm(np.array(Coord)-np.array(C1))
 
-  
-  
+    C2 = np.array([xCentroids[2],yCentroids[2]])
+    dist2 = np.linalg.norm(np.array(Coord)-np.array(C2))
 
-#   data.at[i,"C0"] =  np.linalg.norm()
-#   data.at[i,"C1"] = math.dist([record['X']] , [centroids[1]]) + math.dist([record['Y'] , centroids[1]]) 
-#   data.at[i,"C2"] = math.dist([record['X']] , [centroids[2]]) + math.dist([record['Y'] , centroids[2]]) 
-# data
-#oldNearest = data["nearest"].to_numpy()
-#data["nearest"] = min(data[])
+    data.at[i,"D0"] = dist0
+    data.at[i,"D1"] = dist1
+    data.at[i,"D2"] = dist2
 
-# #initial clusters
-# for i in range(8):
-#   #calculate distances 
-#   dist0 = np.linalg.norm(np.array([x[i], y[i]])-np.array([x[centroids[0]], y[centroids[0]]]))
-#   dist1 = np.linalg.norm(np.array([x[i], y[i]])-np.array([x[centroids[1]], y[centroids[1]]]))
-#   dist2 = np.linalg.norm(np.array([x[i], y[i]])-np.array([x[centroids[2]], y[centroids[2]]]))
+    data.at[i,"nearest"] = nearestCent(dist0, dist1, dist2)
 
-#   near = nearestCent(dist0, dist1, dist2);
+  dat = pd.DataFrame()
+  # group and recombine 
+  byNearest = data.groupby("nearest")
+  for state, frame in byNearest:
+    print(f"First 2 entries for {state!r}")
+    print("------------------------")
+    meanX = frame['X'].mean()
+    meanY = frame['Y'].mean()
 
-#   data.at[i,"D0"] = dist0
-#   data.at[i,"D1"] = dist1
-#   data.at[i,"D2"] = dist2
+    frame['meanX'] = meanX
+    frame['meanY'] = meanY
+    print("STATE", state)
+    xCentroids[state] = meanX
+    yCentroids[state] = meanY
+    dat = dat.append(frame)
+    with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
+      print(frame, "\n\n")
 
-#   # print(dist0)
-#   # print(dist1)
-#   # print(dist2)
+  data = dat.sort_index() #makes sure that the index is kept for the nearest comparison
+  count += 1
+  for i in range (3):
+  #data[f'C{i}'] = centroids[i]
+    data[f'C{i}x'] = xCentroids[i]
+    data[f'C{i}y'] = yCentroids[i]
 
-#   data.at[i,"nearest"] = nearestCent(dist0, dist1, dist2)
+print(count)
 

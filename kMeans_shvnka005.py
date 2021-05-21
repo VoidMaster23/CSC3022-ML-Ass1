@@ -13,28 +13,7 @@ import matplotlib.pyplot as plt
 import math
 from random import randint
 
-def getCoords(data, record):
-    print(record)
-    ind0x =record["C0x"].values[0]
-    ind0y =record["C0y"].values[0]
-    print("ind0x", ind0x, "ind0y", ind0y)
-    ind1 = record["C1x"].values[0]
-    ind2= record["C2x"].values[0]
-
-    # c0 = data.iloc[[ind0]]
-    # C0 = [c0["X"].values[0], c0["Y"].values[0]]
-
-    # c1 = data.iloc[[ind1]]
-    # C1 = [c1["X"].values[0], c1["Y"].values[0]]
-
-    # c2 = data.iloc[[ind2]]
-    # C2 = [c2["X"].values[0], c2["Y"].values[0]]
-
-    coords = [record["X"].values[0], record["Y"].values[0]]
-    print(coords)
-  
-
-    # return coords, C0, C1, C2
+count = 0
 
 def nearestCent(d0,d1,d2):
 
@@ -62,8 +41,8 @@ print( "Input Data" )
 print(data)
 
 #randomly find initial centroid values
-centroids = [1, 4, 7]
-#centroids = [randint(0,7), randint(0,7), randint(0,7)]
+#centroids = [1, 4, 7]
+centroids = [randint(0,7), randint(0,7), randint(0,7)]
 xCentroids = [-1, -1, -1]
 yCentroids = [-1, -1, -1]
 for i in range (3):
@@ -120,20 +99,19 @@ for state, frame in byNearest:
 data = dat.sort_index() #makes sure that the index is kept for the nearest comparison
 data
 
+#updating c values
 for i in range (3):
   #data[f'C{i}'] = centroids[i]
   data[f'C{i}x'] = xCentroids[i]
   data[f'C{i}y'] = yCentroids[i]
-
-#updatuing c values
 data
 
 oldNearest = np.zeros(8)
 
 
-count = 1
+count = 0
 while not ( oldNearest == data['nearest']).all():
-  print("ITERATION\n", count)
+  print("ITERATION", count, end="\n\n")
 
   print("___________PREVIOUS NEAREST CLUSTERS_________________")
   print(oldNearest)
@@ -165,14 +143,16 @@ while not ( oldNearest == data['nearest']).all():
   # group and recombine 
   byNearest = data.groupby("nearest")
   for state, frame in byNearest:
-    print(f"First 2 entries for {state!r}")
+    print(f"CLUSTER  {state!r}:\n")
+    print("Centroid:", [xCentroids[state], yCentroids[state]], end="\n\n")
+    print("Data: ")
     print("------------------------")
     meanX = frame['X'].mean()
     meanY = frame['Y'].mean()
 
     frame['meanX'] = meanX
     frame['meanY'] = meanY
-    print("STATE", state)
+    
     xCentroids[state] = meanX
     yCentroids[state] = meanY
     dat = dat.append(frame)

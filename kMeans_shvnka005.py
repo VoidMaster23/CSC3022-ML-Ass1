@@ -9,8 +9,6 @@ Original file is located at
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import math
 from random import randint
 import sys
 
@@ -26,7 +24,7 @@ yCentroids = [-1, -1, -1]
 
 x = [2, 2, 8, 5, 7, 6, 1, 4]
 y = [10, 5, 4, 8, 5, 4, 2, 9]
-centroids = [1, 4, 7] #initial centroids
+centroids = [0, 3, 6] #initial centroids - examples 1 , 4 and 7
 
 def nearestCent(d0,d1,d2):
 
